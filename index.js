@@ -4,9 +4,13 @@ import {
     output_image,
     extract_objects
 } from "./modules/Image"
+import { checkIfHome } from "./modules/Utility"
 
 (async function main() {
     try {
+        const homeIsOccupied = await checkIfHome()
+        console.log('Home is occupied:', homeIsOccupied)
+
         // Setup image path
         let imagePath = 'data/images/test2.png'
 
