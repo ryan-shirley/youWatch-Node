@@ -1,0 +1,19 @@
+{
+  "name": "youwatch-node",
+  "version": "1.0.0",
+  "description": "youWatch with Node.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r esm index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ryan Shirley",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "request": "^2.88.2",
+    "sharp": "^0.25.2"
+  }
+}
