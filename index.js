@@ -1,11 +1,9 @@
-// Configure Env
-// const dotenv = require('dotenv');
-// dotenv.config();
-
 // Imports
 import sendForPersonDetection from "./modules/API"
-import  { output_image, extract_objects } from "./modules/Image"
-
+import {
+    output_image,
+    extract_objects
+} from "./modules/Image"
 
 (async function main() {
     try {
