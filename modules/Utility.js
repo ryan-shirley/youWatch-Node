@@ -19,10 +19,7 @@ export async function checkIfHome() {
         // If host is alive reutrn
         if(res.alive) {
             return true
-        }
-
-        console.log(res);
-        
+        }        
     }
 
     return false

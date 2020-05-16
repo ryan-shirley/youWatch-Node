@@ -20,20 +20,19 @@ export default function sendForPersonDetection(pathToImage) {
         "min_confidence": process.env.DETECTION_MIN_CONFIDENCE
     }
 
-    // Start Timer
-    let startTime = new Date()
-
     // Send request to API Server
     return new Promise(function (resolve, reject) {
         request.post({
             url: `${process.env.API_URL}:${process.env.API_PORT}/v1/vision/detection`,
-            formData
+            formData,
+            time: true
         }, function (err, res, body) {
+            
             let response = JSON.parse(body),
                 predictions = response.predictions
 
             // Add response time to the response
-            response.response_time = new Date() - startTime // ms
+            response.response_time = res.elapsedTime
 
             if (body.success === false) reject(body)
 
