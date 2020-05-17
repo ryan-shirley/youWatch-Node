@@ -3,30 +3,26 @@ import express from "express"
 var router = express.Router()
 
 // Queue
-import imageQueue from "../modules/Queue"
-import { getMetaFromVideo } from "../modules/Utility"
+import videoQueue from "../modules/Queue"
+import { generateFramesFromVideo } from "../modules/Utility"
 
 /**
  * route('/').get() add test job to queue
  */
 router.route("/").get((req, res) => {
     // Add job to queue
-    imageQueue.add({ pathToFile: "images/test.jpg" })
+    const job = videoQueue.add({ pathToFile: "videos/test.mp4" })
 
-    return res.send("Hello World!")
+    return res.send(job)
 })
 
 /**
  * route('/meta').get() return meta from video file
  */
 router.route("/meta").get(async (req, res) => {
-    let metadata = await getMetaFromVideo("videos/test.mp4")
+    let info = await generateFramesFromVideo("videos/test.mp4")
 
-    return res.send({
-        fps: metadata.video.fps,
-        duration: metadata.duration.seconds,
-        resolution: metadata.video.resolution,
-    })
+    return res.send(info)
 })
 
 export default router

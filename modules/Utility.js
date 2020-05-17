@@ -5,6 +5,8 @@ dotenv.config()
 // Imports
 const ping = require("ping")
 const ffmpeg = require("ffmpeg")
+const path = require("path")
+const fs = require("fs")
 
 /**
  * checkIfHome() returns status if home is occupied
@@ -27,28 +29,72 @@ export async function checkIfHome() {
 }
 
 /**
- * getMetaFromVideo() returns metadata for file
- * based on the passed in video file
+ * generateFramesFromVideo() generates frames
+ * from video file
  */
-export function getMetaFromVideo(pathToFile) {
+export function generateFramesFromVideo(pathToFile) {
     try {
-        var process = new ffmpeg("./data/" + pathToFile)
-        return process.then(
-            (video) => {
-                // Video metadata
-                // console.log(video.metadata)
-                // FFmpeg configuration
-                // console.log(video.info_configuration)
+        // Get image file name
+        let imageFileNameExt = path.basename(pathToFile),
+            imageFileName = imageFileNameExt.slice(0, -4)
 
-                return video.metadata
+        var process = new ffmpeg(pathToFile)
+        return process.then(
+            async function (video) {
+                // Extract frames from video to JPG
+                let frames = await video.fnExtractFrameToJPG(
+                        "./data/temp_frames",
+                        {
+                            frame_rate: 1,
+                            number: 10,
+                            size: "640x?",
+                            file_name: imageFileName,
+                        }
+                    ),
+                    meta = video.metadata
+
+                // Remove first element ".DS_Store"
+                frames.shift()
+
+                // Sort file names correctly - fix 1,10,2 to 1,2,10 etc..
+                let collator = new Intl.Collator(undefined, {
+                    numeric: true,
+                    sensitivity: "base",
+                })
+
+                return {
+                    frames: frames.sort(collator.compare),
+                    fps: meta.video.fps,
+                    duration: meta.duration.seconds,
+                    resolution: meta.video.resolution,
+                }
             },
-            (err) => {
+            function (err) {
                 console.log("Error: " + err)
-                return err
             }
         )
     } catch (e) {
         console.log(e.code)
         console.log(e.msg)
     }
+}
+
+/**
+ * clearTempFiles() removes temporary files
+ * that were created
+ */
+export function clearTempFiles() {
+    const directory = "./data/temp_frames"
+
+    // Read directory
+    fs.readdir(directory, (err, files) => {
+        if (err) throw err
+
+        for (const file of files) {
+            // Remove Files
+            fs.unlink(path.join(directory, file), (err) => {
+                if (err) throw err
+            })
+        }
+    })
 }
