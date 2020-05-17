@@ -11,7 +11,7 @@ import { generateFramesFromVideo } from "../modules/Utility"
  */
 router.route("/").get((req, res) => {
     // Add job to queue
-    const job = videoQueue.add({ pathToFile: "videos/test.mp4" })
+    const job = videoQueue.add({ pathToFile: "videos/no-person.mp4" })
 
     return res.send(job)
 })
