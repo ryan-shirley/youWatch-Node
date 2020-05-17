@@ -23,10 +23,12 @@ export default function sendForPersonDetection(pathToImage) {
     // Send request to API Server
     return new Promise(function (resolve, reject) {
         request.post({
-            url: `${process.env.API_URL}:${process.env.API_PORT}/v1/vision/detection`,
+            url: `${process.env.API_URL}/v1/vision/detection`,
             formData,
             time: true
         }, function (err, res, body) {
+            if (err) throw err 
+            
             
             let response = JSON.parse(body),
                 predictions = response.predictions
