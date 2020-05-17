@@ -72,12 +72,19 @@ videoQueue.process(async (job, done) => {
             job.progress(30 + i * 5)
         }
 
+        // Update job progress
+        job.progress(80)
+
         // Tidy up temp images
         clearTempFiles()
+
+        // Update job progress
+        job.progress(90)
 
         // Add record to database
         console.log('Saving result into database');
         
+        // TODO: Better Format data and move to controller
         const record = new Result({
             camera_id: "5ec18859da5f7a784fd44b94",
             // person_home: 0,
