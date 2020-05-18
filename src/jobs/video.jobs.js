@@ -1,10 +1,10 @@
 // Imports
 var Queue = require("bull")
 const { setQueues } = require("bull-board")
+import { getCurrentDayTime } from "../services/date.service"
 
 // DAO
 import Results from "../dao/results.dao"
-// import Result from "../models/results.model"
 
 // Services
 import {
@@ -23,16 +23,7 @@ setQueues([videoQueue])
 // Define what the image queue is doing
 videoQueue.process(async (job, done) => {
     // Get current day time
-    var today = new Date()
-    var date =
-        today.getFullYear() +
-        "-" +
-        (today.getMonth() + 1) +
-        "-" +
-        today.getDate()
-    var time =
-        today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
-    var dateTime = date + " " + time
+    let dateTime = getCurrentDayTime()
 
     try {
         let personFound = false
@@ -125,7 +116,7 @@ videoQueue.process(async (job, done) => {
         done(null, {
             video_metadata: info,
             person_found: personFound,
-            record
+            record,
         })
     } catch (error) {
         // Job had an error
