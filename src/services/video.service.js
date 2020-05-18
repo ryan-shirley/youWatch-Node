@@ -5,18 +5,31 @@ const fs = require("fs")
 const request = require("request")
 const { createCanvas, loadImage } = require("canvas")
 
-// Models
-// import cameraModel from "../models/camera.model"
+// DAO
+import Cameras from "../dao/cameras.dao"
 
 // Jobs / Queues
 import videoQueue from "../jobs/video.jobs"
 
 export async function addVideoToQueue(fileName) {
-    // Add job to queue
-    const job = await videoQueue.add({ fileName })
-    return job
+    // Get Details from file name
+    const fileDetails = fileName.split("-"),
+        cameraName = fileDetails[0],
+        recordingStartTime = fileDetails[1],
+        recordingEndTime = fileDetails[2].slice(0, -4)
 
-    // Caling UserMode, CompanyModel, etc
+    // Get actual camera name
+    let camera = await Cameras.findOne({ cctv_name: cameraName })
+
+    // Add job to queue
+    const job = await videoQueue.add({
+        fileName,
+        camera,
+        recordingStartTime,
+        recordingEndTime,
+    })
+
+    return job
 }
 
 /**

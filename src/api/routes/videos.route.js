@@ -6,6 +6,7 @@ const router = Router()
 import { addVideoToQueue } from "../../services/video.service"
 
 export default (app) => {
+    // Prefix routes
     app.use("/videos", router)
 
     /**
@@ -20,8 +21,7 @@ export default (app) => {
 
         return res.json({
             message: "Video has been added to the queue",
-            file: fileName,
-            job
+            job,
         })
     })
 }

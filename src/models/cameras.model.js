@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-let CameraSchema = new mongoose.Schema({
+let CamerasSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -13,4 +13,4 @@ let CameraSchema = new mongoose.Schema({
 })
 
 // Export the model
-export default mongoose.model("Camera", CameraSchema)
+export default mongoose.model("Cameras", CamerasSchema)

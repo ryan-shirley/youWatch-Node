@@ -39,8 +39,9 @@ videoQueue.process(async (job, done) => {
         console.log("Image Queue: Running Job")
 
         // Retreieve data from job
-        const data = job.data,
-            videoPath = "./data/videos/" + data.fileName
+        const { data } = job,
+            { camera, recordingStartTime, recordingEndTime, fileName } = data,
+            videoPath = "./data/videos/" + fileName
 
         // Update job progress
         job.progress(10)
