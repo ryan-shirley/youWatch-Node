@@ -1,4 +1,4 @@
-import model from "../models/cameras.model"
+import model from "../models/results.model"
 
 export default {
     find: function (query, cb = null) {
@@ -21,7 +21,7 @@ export default {
         if (cb) {
             obj.save(cb)
         } else {
-            return mongoCamera.save()
+            return obj.save()
         }
     },
 }
