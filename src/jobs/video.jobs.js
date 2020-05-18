@@ -2,7 +2,8 @@
 var Queue = require("bull")
 const { setQueues } = require("bull-board")
 
-// Models
+// DAO
+import Results from "../dao/results.dao"
 // import Result from "../models/results.model"
 
 // Services
@@ -41,7 +42,8 @@ videoQueue.process(async (job, done) => {
         // Retreieve data from job
         const { data } = job,
             { camera, recordingStartTime, recordingEndTime, fileName } = data,
-            videoPath = "./data/videos/" + fileName
+            videoPath = "./data/videos/" + fileName,
+            { _id: cameraId, cameraName: name } = camera
 
         // Update job progress
         job.progress(10)
@@ -93,23 +95,28 @@ videoQueue.process(async (job, done) => {
         console.log("Saving result into database")
 
         // TODO: Better Format data and move to controller
-        // const record = new Result({
-        //     camera_id: "5ec18859da5f7a784fd44b94",
-        //     // person_home: 0,
-        //     person_found: personFound,
-        //     frame_person_found: frameCounter,
-        //     // time_to_detect: 0,
-        //     // avg_api_response_time: 0,
-        //     override_time: false,
-        //     notification_sent: false,
-        //     fps,
-        //     duration,
-        //     resolution: `${resolution.w}x${resolution.h}`,
-        //     video_finish_time: "2018-8-3 11:12:40",
-        //     job_start_time: dateTime,
-        // })
+        let result = {
+            camera_id: cameraId,
+            person_found: personFound,
+            additional_details: {
+                frame_person_found: frameCounter,
+                // time_to_detect: ,
+                // person_home: ,
+                // avg_api_response_time: ,
+                // override_time: ,
+                notification_sent: false,
+                job_start_time: dateTime,
+            },
+            video_information: {
+                fps,
+                duration,
+                resolution: `${resolution.w}x${resolution.h}`,
+                recordingStartTime,
+                recordingEndTime,
+            },
+        }
 
-        // const newRecord = await record.save()
+        let record = Results.save(result)
 
         // Set job as completed and complete
         delete info.frames
@@ -118,6 +125,7 @@ videoQueue.process(async (job, done) => {
         done(null, {
             video_metadata: info,
             person_found: personFound,
+            record
         })
     } catch (error) {
         // Job had an error
