@@ -1,10 +1,17 @@
 // Imports
 var Queue = require("bull")
 const { setQueues } = require("bull-board")
-import sendForPersonDetection from "./API"
-import { output_image, extract_objects } from "./Image"
-import { generateFramesFromVideo, clearTempFiles } from "./Utility"
-import Result from "../models/results.model"
+
+// Models
+// import Result from "../models/results.model"
+
+// Services
+import {
+    generateFramesFromVideo,
+    sendForPersonDetection,
+    output_image,
+    clearTempFiles,
+} from "../services/video.service"
 
 // Setup Queue
 var videoQueue = new Queue("video object detection")
@@ -33,7 +40,7 @@ videoQueue.process(async (job, done) => {
 
         // Retreieve data from job
         const data = job.data,
-            videoPath = "./data/" + data.pathToFile
+            videoPath = "./data/videos/" + data.fileName
 
         // Update job progress
         job.progress(10)
@@ -82,26 +89,26 @@ videoQueue.process(async (job, done) => {
         job.progress(90)
 
         // Add record to database
-        console.log('Saving result into database');
-        
-        // TODO: Better Format data and move to controller
-        const record = new Result({
-            camera_id: "5ec18859da5f7a784fd44b94",
-            // person_home: 0,
-            person_found: personFound,
-            frame_person_found: frameCounter,
-            // time_to_detect: 0,
-            // avg_api_response_time: 0,
-            override_time: false,
-            notification_sent: false,
-            fps,
-            duration,
-            resolution: `${resolution.w}x${resolution.h}`,
-            video_finish_time: "2018-8-3 11:12:40",
-            job_start_time: dateTime,
-        })
+        console.log("Saving result into database")
 
-        const newRecord = await record.save()
+        // TODO: Better Format data and move to controller
+        // const record = new Result({
+        //     camera_id: "5ec18859da5f7a784fd44b94",
+        //     // person_home: 0,
+        //     person_found: personFound,
+        //     frame_person_found: frameCounter,
+        //     // time_to_detect: 0,
+        //     // avg_api_response_time: 0,
+        //     override_time: false,
+        //     notification_sent: false,
+        //     fps,
+        //     duration,
+        //     resolution: `${resolution.w}x${resolution.h}`,
+        //     video_finish_time: "2018-8-3 11:12:40",
+        //     job_start_time: dateTime,
+        // })
+
+        // const newRecord = await record.save()
 
         // Set job as completed and complete
         delete info.frames
@@ -113,13 +120,15 @@ videoQueue.process(async (job, done) => {
         })
     } catch (error) {
         // Job had an error
+        console.log(error)
+
         done(new Error("Some unexpected error: " + error.message))
     }
 })
 
-videoQueue.on("completed", function (job, result) {
-    // Job completed with output result!
-    // console.log("Image Queue: Job Completed", result)
-})
+// videoQueue.on("completed", function (job, result) {
+//     // Job completed with output result!
+//     // console.log("Image Queue: Job Completed", result)
+// })
 
 export default videoQueue
