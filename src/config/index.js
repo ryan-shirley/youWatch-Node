@@ -37,6 +37,16 @@ export default {
     API_DETECTION_URL: process.env.API_URL,
 
     /**
+     * Dropbox API Key
+     */
+    DROPBOX_API_KEY: process.env.DROPBOX_API_KEY,
+
+    /**
+     * IFTTT Webhook URLs
+     */
+    IFTTT_WEBHOOKS: process.env.IFTTT_WEBHOOKS,
+
+    /**
      * Your secret sauce
      */
     // jwtSecret: process.env.JWT_SECRET,

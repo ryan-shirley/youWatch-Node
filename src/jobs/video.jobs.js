@@ -14,6 +14,7 @@ import {
     output_image,
     clearTempFiles,
 } from "../services/video.service"
+import { sendNotifications } from "../services/ifttt.service"
 
 // Setup Queue
 var videoQueue = new Queue("video object detection")
@@ -34,7 +35,7 @@ videoQueue.process(async (job, done) => {
         // Retreieve data from job
         const { data } = job,
             { camera, recordingStartTime, recordingEndTime, fileName, filePath } = data,
-            { _id: cameraId, cameraName: name } = camera
+            { _id: cameraId, name: cameraName } = camera
 
         // Update job progress
         job.progress(10)
@@ -80,12 +81,18 @@ videoQueue.process(async (job, done) => {
         clearTempFiles()
 
         // Update job progress
+        job.progress(85)
+
+        // Send notification using IFTTT
+        let notificationStatus = sendNotifications(cameraName)
+
+        // Update job progress
         job.progress(90)
 
         // Add record to database
         Logger.debug("Saving result into database")
 
-        // TODO: Better Format data and move to controller
+        // Create result object
         let result = {
             camera_id: cameraId,
             person_found: personFound,
@@ -95,7 +102,7 @@ videoQueue.process(async (job, done) => {
                 // person_home: ,
                 // avg_api_response_time: ,
                 // override_time: ,
-                notification_sent: false,
+                notification_sent: notificationStatus,
                 job_start_time: dateTime,
             },
             video_information: {
