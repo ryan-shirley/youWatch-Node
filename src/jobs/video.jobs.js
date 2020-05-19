@@ -117,6 +117,10 @@ videoQueue.process(async (job, done) => {
             job.progress(90)
         }
 
+        // Delete input video
+        deleteFile(filePath)
+        Logger.debug(`Delete input video`)
+
         // Update job progress
         job.progress(95)
 
