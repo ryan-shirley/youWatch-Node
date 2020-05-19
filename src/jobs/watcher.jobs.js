@@ -16,5 +16,5 @@ export default async () => {
     watcher
     .on('add', (path, stats) => addVideoToQueue(path))
 
-    Logger.info("Starting to watch folder for new video clips")
+    Logger.info("Watching folders for new video clips")
 }
