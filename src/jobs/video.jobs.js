@@ -32,15 +32,14 @@ videoQueue.process(async (job, done) => {
 
         // Retreieve data from job
         const { data } = job,
-            { camera, recordingStartTime, recordingEndTime, fileName } = data,
-            videoPath = "./data/videos/" + fileName,
+            { camera, recordingStartTime, recordingEndTime, fileName, filePath } = data,
             { _id: cameraId, cameraName: name } = camera
 
         // Update job progress
         job.progress(10)
 
         // Generate frames from video
-        let info = await generateFramesFromVideo(videoPath),
+        let info = await generateFramesFromVideo(filePath),
             frames = info.frames,
             fps = info.fps,
             duration = info.duration,

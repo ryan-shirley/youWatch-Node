@@ -11,9 +11,12 @@ import Cameras from "../dao/cameras.dao"
 // Jobs / Queues
 import videoQueue from "../jobs/video.jobs"
 
-export async function addVideoToQueue(fileName) {
+export async function addVideoToQueue(filePath) {
+    const filePathDetails = filePath.split("/"),
+        fileName = filePathDetails.slice(-1)
+
     // Get Details from file name
-    const fileDetails = fileName.split("-"),
+    const fileDetails = fileName[0].split("-"),
         cameraName = fileDetails[0],
         recordingStartTime = fileDetails[1],
         recordingEndTime = fileDetails[2].slice(0, -4)
@@ -23,6 +26,7 @@ export async function addVideoToQueue(fileName) {
 
     // Add job to queue
     const job = await videoQueue.add({
+        filePath,
         fileName,
         camera,
         recordingStartTime,

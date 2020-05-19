@@ -27,6 +27,9 @@ async function startServer() {
         Logger.info(`################################################
          🛡️  Server listening on port: ${config.port} 🛡️ 
          ################################################`)
+
+        // Start watching for new video clips
+        require("./jobs/watcher.jobs").default()
     })
 }
 
