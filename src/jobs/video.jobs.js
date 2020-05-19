@@ -16,6 +16,7 @@ import {
 } from "../services/video.service"
 import { sendNotifications } from "../services/ifttt.service"
 import { uploadImage } from "../services/dropbox.service"
+import { uploadVideo } from "../services/slack.service"
 
 // Setup Queue
 var videoQueue = new Queue("video object detection")
@@ -101,6 +102,9 @@ videoQueue.process(async (job, done) => {
             // Send notification using IFTTT
             notificationStatus = sendNotifications(cameraName, dropboxImageURL)
 
+            // Upload video to slack
+            await uploadVideo(filePath, cameraName)
+
             // Update job progress
             job.progress(90)
         }
@@ -109,8 +113,6 @@ videoQueue.process(async (job, done) => {
         job.progress(95)
 
         // Add record to database
-        Logger.debug("Saving result into database")
-
         // Create result object
         let result = {
             camera_id: cameraId,
@@ -134,6 +136,7 @@ videoQueue.process(async (job, done) => {
         }
 
         let record = Results.save(result)
+        Logger.debug("Results saved in MongoDB")
 
         // Set job as completed and complete
         delete info.frames

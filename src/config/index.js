@@ -47,6 +47,11 @@ export default {
     IFTTT_WEBHOOKS: process.env.IFTTT_WEBHOOKS,
 
     /**
+     * Slack Bot Auth Toekn
+     */
+    SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN,
+
+    /**
      * Your secret sauce
      */
     // jwtSecret: process.env.JWT_SECRET,
@@ -59,32 +64,9 @@ export default {
     },
 
     /**
-     * Agenda.js stuff
-     */
-    // agenda: {
-    //     dbCollection: process.env.AGENDA_DB_COLLECTION,
-    //     pooltime: process.env.AGENDA_POOL_TIME,
-    //     concurrency: parseInt(process.env.AGENDA_CONCURRENCY, 10),
-    // },
-
-    /**
-     * Agendash config
-     */
-    // agendash: {
-    //     user: "agendash",
-    //     password: "123456",
-    // },
-    /**
      * API configs
      */
     api: {
         prefix: "/api",
     },
-    /**
-     * Mailgun email credentials
-     */
-    // emails: {
-    //     apiKey: process.env.MAILGUN_API_KEY,
-    //     domain: process.env.MAILGUN_DOMAIN,
-    // },
 }

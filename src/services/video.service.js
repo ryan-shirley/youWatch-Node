@@ -34,6 +34,8 @@ export async function addVideoToQueue(filePath) {
         recordingEndTime,
     })
 
+    Logger.debug(`Job #${job.id} added to the video queue`)
+
     return job
 }
 
@@ -42,8 +44,6 @@ export async function addVideoToQueue(filePath) {
  * from video file
  */
 export function generateFramesFromVideo(pathToFile) {
-    Logger.debug("Generating frames from video")
-
     try {
         // Get image file name
         let imageFileNameExt = path.basename(pathToFile),
@@ -72,6 +72,8 @@ export function generateFramesFromVideo(pathToFile) {
                     numeric: true,
                     sensitivity: "base",
                 })
+
+                Logger.debug("Frames generated. Ready for analysis")
 
                 return {
                     frames: frames.sort(collator.compare),
@@ -204,11 +206,8 @@ export async function output_image(imagePath, predictions) {
 
         // Save Image
         const filePath = `data/outputs/${imageFileName.slice(0, -4)}.png`,
-                buffer = canvas.toBuffer("image/png")
-                fs.writeFileSync(
-                    filePath,
-                    buffer
-        )
+            buffer = canvas.toBuffer("image/png")
+        fs.writeFileSync(filePath, buffer)
         Logger.debug("Saved frame with predictions")
 
         return filePath
@@ -234,6 +233,8 @@ export function clearTempFiles() {
                 if (err) throw err
             })
         }
+
+        Logger.debug(`Cleared generated frames for analysis`)
     })
 }
 
