@@ -15,6 +15,7 @@ import {
     clearTempFiles,
 } from "../services/video.service"
 import { sendNotifications } from "../services/ifttt.service"
+import { uploadImage } from "../services/dropbox.service"
 
 // Setup Queue
 var videoQueue = new Queue("video object detection")
@@ -34,7 +35,13 @@ videoQueue.process(async (job, done) => {
 
         // Retreieve data from job
         const { data } = job,
-            { camera, recordingStartTime, recordingEndTime, fileName, filePath } = data,
+            {
+                camera,
+                recordingStartTime,
+                recordingEndTime,
+                fileName,
+                filePath,
+            } = data,
             { _id: cameraId, name: cameraName } = camera
 
         // Update job progress
@@ -51,7 +58,8 @@ videoQueue.process(async (job, done) => {
         job.progress(20)
 
         // Loop frames to detect person
-        let frameCounter = null
+        let frameCounter = null,
+            pathToImageWithDetections = null
         for (let i = 0; i < frames.length; i++) {
             let framePath = frames[i]
 
@@ -65,7 +73,10 @@ videoQueue.process(async (job, done) => {
                 frameCounter = i + 1
 
                 // Save image to file
-                await output_image(framePath, predictions)
+                pathToImageWithDetections = await output_image(
+                    framePath,
+                    predictions
+                )
 
                 break
             }
@@ -74,20 +85,28 @@ videoQueue.process(async (job, done) => {
             job.progress(30 + i * 5)
         }
 
-        // Update job progress
-        job.progress(80)
-
         // Tidy up temp images
         clearTempFiles()
 
         // Update job progress
-        job.progress(85)
+        job.progress(80)
 
-        // Send notification using IFTTT
-        let notificationStatus = sendNotifications(cameraName)
+        // Run only if person is found in frame
+        let notificationStatus = false
+
+        if (personFound) {
+            // TODO: Upload image to Dropbox
+            let dropboxImageURL = await uploadImage(pathToImageWithDetections)
+
+            // Send notification using IFTTT
+            notificationStatus = sendNotifications(cameraName, dropboxImageURL)
+
+            // Update job progress
+            job.progress(90)
+        }
 
         // Update job progress
-        job.progress(90)
+        job.progress(95)
 
         // Add record to database
         Logger.debug("Saving result into database")
@@ -128,6 +147,7 @@ videoQueue.process(async (job, done) => {
     } catch (error) {
         // Job had an error
         Logger.debug(error)
+        console.log(error)
 
         done(new Error("Some unexpected error: " + error.message))
     }

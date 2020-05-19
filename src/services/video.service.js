@@ -28,7 +28,7 @@ export async function addVideoToQueue(filePath) {
     // Add job to queue
     const job = await videoQueue.add({
         filePath,
-        fileName,
+        fileName: fileName[0],
         camera,
         recordingStartTime,
         recordingEndTime,
@@ -203,12 +203,15 @@ export async function output_image(imagePath, predictions) {
         }
 
         // Save Image
-        const buffer = canvas.toBuffer("image/png")
-        fs.writeFileSync(
-            `data/outputs/${imageFileName.slice(0, -4)}.png`,
-            buffer
+        const filePath = `data/outputs/${imageFileName.slice(0, -4)}.png`,
+                buffer = canvas.toBuffer("image/png")
+                fs.writeFileSync(
+                    filePath,
+                    buffer
         )
         Logger.debug("Saved frame with predictions")
+
+        return filePath
     } catch (error) {
         throw new Error(error)
     }
