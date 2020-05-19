@@ -1,9 +1,5 @@
-// import "reflect-metadata" // We need this in order to use @Decorators
-
 import config from "./config"
-
 import express from "express"
-
 import Logger from "./loaders/logger"
 
 async function startServer() {
@@ -17,6 +13,9 @@ async function startServer() {
      **/
     await require("./loaders").default({ expressApp: app })
 
+    // Start watching for new video clips
+    require("./jobs/watcher.jobs").default()
+
     app.listen(config.port, (err) => {
         if (err) {
             Logger.error(err)
@@ -27,9 +26,6 @@ async function startServer() {
         Logger.info(`################################################
          🛡️  Server listening on port: ${config.port} 🛡️ 
          ################################################`)
-
-        // Start watching for new video clips
-        require("./jobs/watcher.jobs").default()
     })
 }
 
