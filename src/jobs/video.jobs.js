@@ -12,11 +12,11 @@ import {
     generateFramesFromVideo,
     sendForPersonDetection,
     output_image,
-    clearTempFiles,
 } from "../services/video.service"
 import { sendNotifications } from "../services/ifttt.service"
 import { uploadImage } from "../services/dropbox.service"
 import { uploadVideo } from "../services/slack.service"
+import { deleteFiles, deleteFile } from "../services/storage.service"
 
 // Setup Queue
 var videoQueue = new Queue("video object detection")
@@ -86,8 +86,9 @@ videoQueue.process(async (job, done) => {
             job.progress(30 + i * 5)
         }
 
-        // Tidy up temp images
-        clearTempFiles()
+        // Tidy up generated frames
+        deleteFiles(frames)
+        Logger.debug(`Cleared generated frames for analysis`)
 
         // Update job progress
         job.progress(80)
@@ -102,8 +103,15 @@ videoQueue.process(async (job, done) => {
             // Send notification using IFTTT
             notificationStatus = sendNotifications(cameraName, dropboxImageURL)
 
+            // Update job progress
+            job.progress(85)
+
             // Upload video to slack
             await uploadVideo(filePath, cameraName)
+
+            // Delete thumbnail with predictions
+            deleteFile(pathToImageWithDetections)
+            Logger.debug(`Delete thumbnail with predictions`)
 
             // Update job progress
             job.progress(90)

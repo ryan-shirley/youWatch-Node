@@ -217,28 +217,6 @@ export async function output_image(imagePath, predictions) {
 }
 
 /**
- * clearTempFiles() removes temporary files
- * that were created
- */
-export function clearTempFiles() {
-    const directory = "./data/temp_frames"
-
-    // Read directory
-    fs.readdir(directory, (err, files) => {
-        if (err) throw err
-
-        for (const file of files) {
-            // Remove Files
-            fs.unlink(path.join(directory, file), (err) => {
-                if (err) throw err
-            })
-        }
-
-        Logger.debug(`Cleared generated frames for analysis`)
-    })
-}
-
-/**
  * extract_objects() saves seperate images
  * for each of the detections found
  */
