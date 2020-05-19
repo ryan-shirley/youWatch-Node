@@ -2,6 +2,7 @@
 var Queue = require("bull")
 const { setQueues } = require("bull-board")
 import { getCurrentDayTime } from "../services/date.service"
+import Logger from "../loaders/logger"
 
 // DAO
 import Results from "../dao/results.dao"
@@ -28,7 +29,7 @@ videoQueue.process(async (job, done) => {
     try {
         let personFound = false
 
-        console.log("Image Queue: Running Job")
+        Logger.debug("Image Queue: Running Job")
 
         // Retreieve data from job
         const { data } = job,
@@ -82,7 +83,7 @@ videoQueue.process(async (job, done) => {
         job.progress(90)
 
         // Add record to database
-        console.log("Saving result into database")
+        Logger.debug("Saving result into database")
 
         // TODO: Better Format data and move to controller
         let result = {
@@ -119,15 +120,15 @@ videoQueue.process(async (job, done) => {
         })
     } catch (error) {
         // Job had an error
-        console.log(error)
+        Logger.debug(error)
 
         done(new Error("Some unexpected error: " + error.message))
     }
 })
 
-// videoQueue.on("completed", function (job, result) {
-//     // Job completed with output result!
-//     // console.log("Image Queue: Job Completed", result)
-// })
+videoQueue.on("completed", function (job, result) {
+    // Job completed with output result!
+    Logger.debug("Image Queue: Job Completed")
+})
 
 export default videoQueue

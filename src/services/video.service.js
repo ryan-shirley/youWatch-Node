@@ -1,4 +1,5 @@
 import config from "../config"
+import Logger from "../loaders/logger"
 const ffmpeg = require("ffmpeg")
 const path = require("path")
 const fs = require("fs")
@@ -41,7 +42,7 @@ export async function addVideoToQueue(filePath) {
  * from video file
  */
 export function generateFramesFromVideo(pathToFile) {
-    console.log("Generating frames from video")
+    Logger.debug("Generating frames from video")
 
     try {
         // Get image file name
@@ -80,14 +81,13 @@ export function generateFramesFromVideo(pathToFile) {
                 }
             },
             function (err) {
-                console.log("Error: " + err)
+                Logger.debug("Error: " + err)
             }
         )
     } catch (e) {
-        console.log(e)
-
-        console.log(e.code)
-        console.log(e.msg)
+        // console.log(e)
+        // console.log(e.code)
+        Logger.debug(e.code + " " + e.msg)
     }
 }
 
@@ -96,7 +96,7 @@ export function generateFramesFromVideo(pathToFile) {
  * based on the passed-in image
  */
 export function sendForPersonDetection(pathToImage) {
-    console.log("Sending frame for detection", pathToImage)
+    Logger.debug("Sending frame for detection", pathToImage)
 
     // Retrieve Image
     let imageStream = fs.createReadStream(pathToImage)
@@ -146,8 +146,6 @@ export function sendForPersonDetection(pathToImage) {
  * with bounding box and confidence score
  */
 export async function output_image(imagePath, predictions) {
-    console.log("Outputting image with predictions")
-
     try {
         // Get image file name
         let imageFileName = path.basename(imagePath)
@@ -205,12 +203,12 @@ export async function output_image(imagePath, predictions) {
         }
 
         // Save Image
-        console.log("Saving predictions on top of image.")
         const buffer = canvas.toBuffer("image/png")
         fs.writeFileSync(
             `data/outputs/${imageFileName.slice(0, -4)}.png`,
             buffer
         )
+        Logger.debug("Saved frame with predictions")
     } catch (error) {
         throw new Error(error)
     }
@@ -273,15 +271,15 @@ export function extract_objects(imagePath, predictions) {
             })
             .toFile(outputImage)
             .then((new_file_info) => {
-                console.log(
+                Logger.debug(
                     `Image saved with a detection of a ${label} with ${
                         confidence.toFixed(2) * 100
                     }% confidence.`
                 )
             })
             .catch((err) => {
-                console.log(err)
-                console.log("An error occured")
+                // console.log(err)
+                Logger.debug("An error occured extracting object from frame")
             })
     }
 }
