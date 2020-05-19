@@ -55,7 +55,7 @@ videoQueue.process(async (job, done) => {
             let framePath = frames[i]
 
             // Send image to API for detections
-            let response = await sendForPersonDetection(framePath),
+            let response = await sendForPersonDetection(framePath, i + 1),
                 predictions = response.predictions
 
             // Check if person was found

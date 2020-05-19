@@ -95,8 +95,8 @@ export function generateFramesFromVideo(pathToFile) {
  * sendForPersonDetection() returns detections found
  * based on the passed-in image
  */
-export function sendForPersonDetection(pathToImage) {
-    Logger.debug("Sending frame for detection", pathToImage)
+export function sendForPersonDetection(pathToImage, frameNumber = null) {
+    Logger.debug(`Sending frame ${frameNumber} for object detection`)
 
     // Retrieve Image
     let imageStream = fs.createReadStream(pathToImage)
