@@ -1,6 +1,8 @@
 import Logger from "../loaders/logger"
 import chokidar from "chokidar"
 import moveFile from "move-file"
+import moment from "moment"
+import config from "../config"
 
 // Services
 import { addVideoToQueue } from "../services/video.service"
@@ -25,7 +27,10 @@ export default async () => {
 
     // Add event listeners.
     watcher.on("add", async (path, stats) => {
-        const homeIsOccupied = await checkIfHome()
+        const currentHour = moment().format("H"),
+            isInOverrideTime =
+                currentHour > config.HOUSE_OVERRIDE_TIMES.start ||
+                currentHour < config.HOUSE_OVERRIDE_TIMES.end
 
         // House is empty
         const filePathDetails = path.split("/"),
@@ -56,7 +61,7 @@ export default async () => {
                 6
             )}`
 
-        if (!homeIsOccupied) {
+        if (isInOverrideTime || !(await checkIfHome())) {
             // Move file to analysis folder
             const newDestination = `data/videos/analysis/${fileName}`
             await moveFile(path, newDestination)
@@ -79,7 +84,7 @@ export default async () => {
                     recordingEndTime: recordingEndTimestamp,
                 },
                 additional_details: {
-                    person_home: homeIsOccupied,
+                    person_home: true,
                     notification_sent: false,
                 },
             }

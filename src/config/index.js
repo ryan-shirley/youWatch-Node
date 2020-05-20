@@ -32,6 +32,14 @@ export default {
     FAMILY_PHONE_IP_ADDRESSES: process.env.FAMILY_PHONE_IP_ADDRESSES.split(" "),
 
     /**
+     * Times to override house stats - Send notifications even if at home
+     */
+    HOUSE_OVERRIDE_TIMES: {
+        start: process.env.HOUSE_OVERRIDE_TIME_START, // If hour is after will analyse or
+        end: process.env.HOUSE_OVERRIDE_TIME_END // If hour is before will analyse
+    },
+
+    /**
      * API Detection URL
      */
     API_DETECTION_URL: process.env.API_URL,
