@@ -1,4 +1,5 @@
 import config from "../config"
+import Logger from "../loaders/logger"
 const ping = require("ping")
 
 /**
@@ -14,9 +15,11 @@ export async function checkIfHome() {
 
         // If host is alive reutrn
         if (res.alive) {
+            Logger.debug(`${host} IP address alive. House is occupied`)
             return true
         }
     }
 
+    Logger.debug(`House is empty`)
     return false
 }

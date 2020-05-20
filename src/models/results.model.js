@@ -11,6 +11,10 @@ let ResultsSchema = new mongoose.Schema(
             type: Boolean,
             required: false,
         },
+        video_analysed: {
+            type: Boolean,
+            required: true,
+        },
         additional_details: {
             frame_person_found: {
                 type: Number,
@@ -39,21 +43,21 @@ let ResultsSchema = new mongoose.Schema(
             },
             job_start_time: {
                 type: Date,
-                required: true,
+                required: false,
             },
         },
         video_information: {
             fps: {
                 type: Number,
-                required: true,
+                required: false,
             },
             duration: {
                 type: Number,
-                required: true,
+                required: false,
             },
             resolution: {
                 type: String,
-                required: true,
+                required: false,
             },
             recordingStartTime: {
                 type: Date,

@@ -113,7 +113,7 @@ videoQueue.process(async (job, done) => {
 
             // Delete thumbnail with predictions
             deleteFile(pathToImageWithDetections)
-            Logger.debug(`Delete thumbnail with predictions`)
+            Logger.debug(`Deleted thumbnail with predictions`)
 
             // Update job progress
             job.progress(90)
@@ -121,7 +121,7 @@ videoQueue.process(async (job, done) => {
 
         // Delete input video
         deleteFile(filePath)
-        Logger.debug(`Delete input video`)
+        Logger.debug(`Deleted input video`)
 
         // Update job progress
         job.progress(95)
@@ -131,6 +131,7 @@ videoQueue.process(async (job, done) => {
         let result = {
             camera_id: cameraId,
             person_found: personFound,
+            video_analysed: true,
             additional_details: {
                 frame_person_found: frameCounter,
                 // time_to_detect: ,
