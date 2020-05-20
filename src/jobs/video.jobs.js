@@ -39,12 +39,12 @@ videoQueue.process(async (job, done) => {
         const { data } = job,
             {
                 reolinkCameraName,
-                recordingStartTime,
-                recordingEndTime,
+                recordingStartTimestamp,
+                recordingEndTimestamp,
                 fileName,
                 filePath,
             } = data,
-                camera = await Cameras.findOne({ cctv_name: reolinkCameraName }),
+            camera = await Cameras.findOne({ cctv_name: reolinkCameraName }),
             { _id: cameraId, name: cameraName } = camera
 
         // Update job progress
@@ -99,7 +99,7 @@ videoQueue.process(async (job, done) => {
         let notificationStatus = false
 
         if (personFound) {
-            // TODO: Upload image to Dropbox
+            // Upload image to Dropbox
             let dropboxImageURL = await uploadImage(pathToImageWithDetections)
 
             // Send notification using IFTTT
@@ -144,8 +144,8 @@ videoQueue.process(async (job, done) => {
                 fps,
                 duration,
                 resolution: `${resolution.w}x${resolution.h}`,
-                recordingStartTime,
-                recordingEndTime,
+                recordingStartTime: recordingStartTimestamp,
+                recordingEndTime: recordingEndTimestamp,
             },
         }
 

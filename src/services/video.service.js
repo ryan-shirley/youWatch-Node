@@ -9,24 +9,20 @@ const { createCanvas, loadImage } = require("canvas")
 // Jobs / Queues
 import videoQueue from "../jobs/video.jobs"
 
-export async function addVideoToQueue(filePath) {
-    const filePathDetails = filePath.split("/"),
-        fileName = filePathDetails.slice(-1)
-
-    // Get Details from file name
-    const fileDetails = fileName[0].split("-"),
-        reolinkCameraName = fileDetails[0],
-        recordingStartTime = fileDetails[1],
-        recordingEndTime = fileDetails[2].slice(0, -4)
-
-
+export async function addVideoToQueue(
+    filePath,
+    fileName,
+    reolinkCameraName,
+    recordingStartTimestamp,
+    recordingEndTimestamp
+) {
     // Add job to queue
     const job = await videoQueue.add({
         filePath,
-        fileName: fileName[0],
+        fileName,
         reolinkCameraName,
-        recordingStartTime,
-        recordingEndTime,
+        recordingStartTimestamp,
+        recordingEndTimestamp,
     })
 
     Logger.debug(`Job #${job.id} added to the video queue`)
