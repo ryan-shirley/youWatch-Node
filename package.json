@@ -23,6 +23,7 @@
     "ffmpeg": "0.0.4",
     "isomorphic-fetch": "^2.2.1",
     "mongoose": "^5.9.14",
+    "move-file": "^2.0.0",
     "ping": "^0.2.3",
     "request": "^2.88.2",
     "sharp": "^0.25.2",
