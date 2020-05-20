@@ -170,6 +170,7 @@ videoQueue.process(async (job, done) => {
 
 videoQueue.on("completed", function (job, result) {
     // Job completed with output result!
+    Logger.debug(`Person Found: ${result.person_found}`)
     Logger.debug("Image Queue: Job Completed")
 })
 
