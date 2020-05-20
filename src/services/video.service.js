@@ -6,9 +6,6 @@ const fs = require("fs")
 const request = require("request")
 const { createCanvas, loadImage } = require("canvas")
 
-// DAO
-import Cameras from "../dao/cameras.dao"
-
 // Jobs / Queues
 import videoQueue from "../jobs/video.jobs"
 
@@ -18,18 +15,16 @@ export async function addVideoToQueue(filePath) {
 
     // Get Details from file name
     const fileDetails = fileName[0].split("-"),
-        cameraName = fileDetails[0],
+        reolinkCameraName = fileDetails[0],
         recordingStartTime = fileDetails[1],
         recordingEndTime = fileDetails[2].slice(0, -4)
 
-    // Get actual camera name
-    let camera = await Cameras.findOne({ cctv_name: cameraName })
 
     // Add job to queue
     const job = await videoQueue.add({
         filePath,
         fileName: fileName[0],
-        camera,
+        reolinkCameraName,
         recordingStartTime,
         recordingEndTime,
     })

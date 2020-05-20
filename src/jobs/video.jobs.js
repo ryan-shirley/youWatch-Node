@@ -6,6 +6,7 @@ import Logger from "../loaders/logger"
 
 // DAO
 import Results from "../dao/results.dao"
+import Cameras from "../dao/cameras.dao"
 
 // Services
 import {
@@ -37,12 +38,13 @@ videoQueue.process(async (job, done) => {
         // Retreieve data from job
         const { data } = job,
             {
-                camera,
+                reolinkCameraName,
                 recordingStartTime,
                 recordingEndTime,
                 fileName,
                 filePath,
             } = data,
+                camera = await Cameras.findOne({ cctv_name: reolinkCameraName }),
             { _id: cameraId, name: cameraName } = camera
 
         // Update job progress
