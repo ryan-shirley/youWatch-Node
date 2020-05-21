@@ -40,8 +40,14 @@ export default async () => {
             recordingMonth = recordingDate.substring(0, 2),
             recordingDay = recordingDate.substring(2, 4)
 
+        // If name contains 'Reolink' modify filename variable to remove this
+        let newFileName = fileName
+        if (fileName[0].includes("Reolink")) {
+            newFileName = fileName[0].split(" ")[1]
+        }
+
         // Get Details from file name
-        const fileDetails = fileName[0].split("-"),
+        const fileDetails = newFileName.split("-"),
             reolinkCameraName = fileDetails[0],
             camera = await Cameras.findOne({ cctv_name: reolinkCameraName }),
             recordingStartTime = fileDetails[1],
@@ -61,16 +67,16 @@ export default async () => {
                 6
             )}`
 
-        Logger.debug('Override Status:' + isInOverrideTime.toString())
-        
+        Logger.debug("Override Status:" + isInOverrideTime.toString())
+
         if (isInOverrideTime || !(await checkIfHome())) {
             // Move file to analysis folder
-            const newDestination = `data/videos/analysis/${fileName}`
+            const newDestination = `data/videos/analysis/${newFileName}`
             await moveFile(path, newDestination)
 
             return addVideoToQueue(
                 newDestination,
-                fileName,
+                newFileName,
                 reolinkCameraName,
                 recordingStartTimestamp,
                 recordingEndTimestamp
