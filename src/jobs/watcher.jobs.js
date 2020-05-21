@@ -29,7 +29,7 @@ export default async () => {
     watcher.on("add", async (path, stats) => {
         const currentHour = moment().format("H"),
             isInOverrideTime =
-                currentHour > parseInt(config.HOUSE_OVERRIDE_TIMES.start, 0) ||
+                currentHour >= parseInt(config.HOUSE_OVERRIDE_TIMES.start, 0) ||
                 currentHour < parseInt(config.HOUSE_OVERRIDE_TIMES.end, 0)
 
         // House is empty
