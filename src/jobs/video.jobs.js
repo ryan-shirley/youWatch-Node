@@ -3,6 +3,7 @@ var Queue = require("bull")
 const { setQueues } = require("bull-board")
 import { getCurrentDayTime } from "../services/date.service"
 import Logger from "../loaders/logger"
+import config from "../config"
 
 // DAO
 import Results from "../dao/results.dao"
@@ -20,7 +21,9 @@ import { uploadVideo } from "../services/slack.service"
 import { deleteFiles, deleteFile } from "../services/storage.service"
 
 // Setup Queue
-var videoQueue = new Queue("video object detection")
+var videoQueue = new Queue("video object detection", {
+    redis: { port: 6379, host: config.REDIS_HOST || "127.0.0.1" },
+})
 
 // Add queues to dashboard
 setQueues([videoQueue])

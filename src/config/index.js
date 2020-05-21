@@ -4,11 +4,11 @@ import dotenv from "dotenv"
 process.env.NODE_ENV = process.env.NODE_ENV || "development"
 
 const envFound = dotenv.config()
-if (envFound.error) {
-    // This error should crash whole process
+// if (envFound.error) {
+//     // This error should crash whole process
 
-    throw new Error("⚠️  Couldn't find .env file  ⚠️")
-}
+//     throw new Error("⚠️  Couldn't find .env file  ⚠️")
+// }
 
 export default {
     /**
@@ -36,7 +36,7 @@ export default {
      */
     HOUSE_OVERRIDE_TIMES: {
         start: process.env.HOUSE_OVERRIDE_TIME_START, // If hour is after will analyse or
-        end: process.env.HOUSE_OVERRIDE_TIME_END // If hour is before will analyse
+        end: process.env.HOUSE_OVERRIDE_TIME_END, // If hour is before will analyse
     },
 
     /**
@@ -58,6 +58,11 @@ export default {
      * Slack Bot Auth Toekn
      */
     SLACK_BOT_TOKEN: process.env.SLACK_BOT_TOKEN,
+
+    /**
+     * REDIS_HOST
+     */
+    REDIS_HOST: process.env.REDIS_HOST,
 
     /**
      * Your secret sauce

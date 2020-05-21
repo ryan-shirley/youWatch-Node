@@ -1,0 +1,29 @@
+version: '3'
+services:
+  youwatch-server:
+    container_name: youwatch-server
+    build: .  
+    ports:
+     - "3000:3000"
+    links:
+     - youwatch-redis:redis
+    volumes:
+     - "${HOST_FILES}:/app/data"
+    environment:
+     - MONGODB_URI_DEV=${MONGODB_URI_DEV}   
+     - MONGODB_URI_LIVE=${MONGODB_URI_LIVE}
+     - PORT=3000
+     - API_URL=${API_URL}
+     - DETECTION_MIN_CONFIDENCE=${DETECTION_MIN_CONFIDENCE}
+     - FAMILY_PHONE_IP_ADDRESSES=${FAMILY_PHONE_IP_ADDRESSES}
+     - HOUSE_OVERRIDE_TIME_START=${HOUSE_OVERRIDE_TIME_START}
+     - HOUSE_OVERRIDE_TIME_END=${HOUSE_OVERRIDE_TIME_END}
+     - DROPBOX_API_KEY=${DROPBOX_API_KEY}
+     - IFTTT_WEBHOOKS=${IFTTT_WEBHOOKS}
+     - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
+     - REDIS_HOST=${REDIS_HOST}
+  youwatch-redis:
+    container_name: youwatch-redis
+    image: "redis:alpine"
+    volumes:
+      - redis_data:/data
