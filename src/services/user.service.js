@@ -18,6 +18,8 @@ export async function checkIfHome() {
             Logger.debug(`${host} IP address alive. House is occupied`)
             return true
         }
+
+        Logger.debug(`${host} IP address not alive`)
     }
 
     Logger.debug(`House is empty`)
