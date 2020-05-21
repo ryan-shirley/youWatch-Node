@@ -29,8 +29,8 @@ export default async () => {
     watcher.on("add", async (path, stats) => {
         const currentHour = moment().format("H"),
             isInOverrideTime =
-                currentHour > config.HOUSE_OVERRIDE_TIMES.start ||
-                currentHour < config.HOUSE_OVERRIDE_TIMES.end
+                currentHour > parseInt(config.HOUSE_OVERRIDE_TIMES.start, 0) ||
+                currentHour < parseInt(config.HOUSE_OVERRIDE_TIMES.end, 0)
 
         // House is empty
         const filePathDetails = path.split("/"),
@@ -61,6 +61,8 @@ export default async () => {
                 6
             )}`
 
+        Logger.debug('Override Status:' + isInOverrideTime.toString())
+        
         if (isInOverrideTime || !(await checkIfHome())) {
             // Move file to analysis folder
             const newDestination = `data/videos/analysis/${fileName}`
