@@ -16,6 +16,9 @@ async function startServer() {
     // Start watching for new video clips
     // require("./jobs/watcher.jobs").default()
 
+    // Save images from camera - Custom model learning
+    require("./jobs/car-image-learning.jobs").default()
+
     app.listen(config.port, (err) => {
         if (err) {
             Logger.error(err)

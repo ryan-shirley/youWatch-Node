@@ -65,6 +65,11 @@ export default {
     REDIS_HOST: process.env.REDIS_HOST,
 
     /**
+     * Camera learning URL
+     */
+    CAMERA_LEARNING_URL: process.env.CAMERA_LEARNING_URL,
+
+    /**
      * Your secret sauce
      */
     // jwtSecret: process.env.JWT_SECRET,
