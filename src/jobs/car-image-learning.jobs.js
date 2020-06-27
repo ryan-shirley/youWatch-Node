@@ -3,7 +3,7 @@ var Queue = require("bull")
 const { setQueues } = require("bull-board")
 import Logger from "../loaders/logger"
 import config from "../config"
-import { getCurrentDayTime } from "../services/date.service"
+import { getCurrentDayTimeFile } from "../services/date.service"
 const fs = require("fs")
 const request = require("request")
 
@@ -30,8 +30,8 @@ export default async () => {
             Logger.debug("Fetching image")
 
             // File destination
-            let dateTime = getCurrentDayTime()
-            const destPath = `./data/car-images/car-timelapse-${dateTime}.jpg`
+            let dateTime = getCurrentDayTimeFile()
+            const destPath = `./data/car-images/car-${dateTime}.jpg`
             job.progress(40)
 
             // Download file
