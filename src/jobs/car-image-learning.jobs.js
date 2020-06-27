@@ -32,10 +32,13 @@ export default async () => {
             // File destination
             let dateTime = getCurrentDayTime()
             const destPath = `./data/car-images/car-timelapse-${dateTime}.jpg`
+            job.progress(40)
 
             // Download file
             download(config.CAMERA_LEARNING_URL, destPath, () => {
                 Logger.debug(`Image downloaded at ${dateTime}`)
+                
+                job.progress(100)
                 done()
             })
         } catch (error) {
