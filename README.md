@@ -70,6 +70,7 @@ In order to achieve the desired functioning project, a range of existing tools a
 - MongoDB
 - FFmpeg
 - Canvas
+- Docker
 
 ## To Do
 
@@ -115,5 +116,38 @@ In order to achieve the desired functioning project, a range of existing tools a
 - [x]  Object detection API
 - [ ]  Object detection API - GPU enabled
 - [ ]  Custom model - car open/closed
+- [x]  Save car images every 30 minutes (data to train custom model)
 - [ ]  Calculate time to detect person
 - [ ]  Calculate average api response time
+
+## How to run locally
+
+### Redis Server
+
+**`redis-server`**
+
+Start the Redis server to manage jobs
+
+### Start application
+
+**`npm run dev` or `npm run start`**
+
+Start the application in development mode using the "dev" keyword. Running in production use the "start" keyword.
+
+## Environment Variables
+
+## Docker
+
+### How to build
+
+docker build -t IMAGE_NAME .
+
+### How to push to Dockerhub
+
+docker push IMAGE_NAME
+
+### Dockerhub
+
+Repository is set to auto build on my Dockerhub
+
+Docker bind container path **`/home/node/app/data`** to local path for data.
