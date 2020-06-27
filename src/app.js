@@ -14,7 +14,7 @@ async function startServer() {
     await require("./loaders").default({ expressApp: app })
 
     // Start watching for new video clips
-    require("./jobs/watcher.jobs").default()
+    // require("./jobs/watcher.jobs").default()
 
     app.listen(config.port, (err) => {
         if (err) {
