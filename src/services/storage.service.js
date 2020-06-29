@@ -26,3 +26,21 @@ export function deleteFile(file) {
 
     return true
 }
+
+/**
+ * getFilesInDir() Return all files in a directory
+ */
+export function getFilesInDir(dirname) {
+    return new Promise((resolve, reject) => {
+        fs.readdir(dirname, (err, files) => {
+            if(err) {
+                return reject(err)
+            }
+
+            // Remove .DS_Store
+            files.shift()
+
+            return resolve(files);
+        });
+    });
+}

@@ -5,6 +5,8 @@ const path = require("path")
 const fs = require("fs")
 const request = require("request")
 const { createCanvas, loadImage } = require("canvas")
+const easyimage = require("easyimage")
+const sharp = require('sharp')
 
 // Jobs / Queues
 import videoQueue from "../jobs/video.jobs"
@@ -211,7 +213,9 @@ export async function output_image(imagePath, predictions) {
  * extract_objects() saves seperate images
  * for each of the detections found
  */
-export function extract_objects(imagePath, predictions) {
+export function extract_objects(imagePath, predictions, onlyLabel) {
+    Logger.debug(`Extracting object from image`)
+
     // Get image file name
     let imageFileName = path.basename(imagePath)
 
@@ -229,8 +233,13 @@ export function extract_objects(imagePath, predictions) {
                 i + 1
             }_${label}_${confidence.toFixed(2)}.png`
 
-        // Skip if not a person
-        if (label !== "person") {
+        // // Skip if not a person
+        // if (label !== "person") {
+        //     continue
+        // }
+
+        // Skip if not
+        if (label !== onlyLabel) {
             continue
         }
 
